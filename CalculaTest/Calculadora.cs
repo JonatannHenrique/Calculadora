@@ -129,14 +129,14 @@ namespace CalculaTest
 
             input = input.Trim();
 
-            // Tenta cultura atual (usuário BR pode usar vírgula) e depois Invariant (ponto)
+            
             if (double.TryParse(input, NumberStyles.Float | NumberStyles.AllowThousands, CultureInfo.CurrentCulture, out value))
                 return true;
 
             if (double.TryParse(input, NumberStyles.Float | NumberStyles.AllowThousands, CultureInfo.InvariantCulture, out value))
                 return true;
 
-            // tenta substituir vírgula/ponto para recuperar alguns casos
+      
             var alt = input.Replace(',', '.');
             if (double.TryParse(alt, NumberStyles.Float | NumberStyles.AllowThousands, CultureInfo.InvariantCulture, out value))
                 return true;
