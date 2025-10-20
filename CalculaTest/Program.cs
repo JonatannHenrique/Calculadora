@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CalculaTest
 {
@@ -10,26 +6,56 @@ namespace CalculaTest
     {
         static void Main(string[] args)
         {
+            Console.WriteLine("Calculadora simples — digite 'sair' para encerrar.");
             while (true)
             {
-
-                Console.WriteLine("↓ CALCULADORA ↓");
-                Console.Write("Digite o primeiro numero: ");
-                string n1 = Console.ReadLine();
-                Console.WriteLine("Escolha (+ <Mas , - <menos, / < divisão , * < multiplicaçao )");
-                string op = Console.ReadLine();
                 Console.WriteLine();
-                Console.Write("Digite o Segundo Numero: ");
-                string n2 = Console.ReadLine();
+                Console.Write("Digite o primeiro número: ");
+                string raw1 = Console.ReadLine();
+                if (IsExit(raw1)) break;
 
-                if (double.TryParse(n1, out double num1) && double.TryParse(n2, out double num2))
+                Console.Write("Escolha operação (+, -, *, /, ^, %, ou palavras: soma, sub, mul, div, pot, mod): ");
+                string opRaw = Console.ReadLine();
+                if (IsExit(opRaw)) break;
+
+                Console.Write("Digite o segundo número: ");
+                string raw2 = Console.ReadLine();
+                if (IsExit(raw2)) break;
+
+                if (!Calculadora.TryParseDoubleFlexible(raw1, out double num1))
                 {
-                    double resultado = Calculadora.calcular(num1, num2, op);
+                    Console.WriteLine("Entrada inválida para o primeiro número.");
+                    continue;
+                }
+
+                if (!Calculadora.TryParseDoubleFlexible(raw2, out double num2))
+                {
+                    Console.WriteLine("Entrada inválida para o segundo número.");
+                    continue;
+                }
+
+                if (!Calculadora.TryParseOperacao(opRaw, out Operacao operacao))
+                {
+                    Console.WriteLine("Operação inválida. Exemplos válidos: + - * / ^ %");
+                    continue;
+                }
+
+                if (Calculadora.TryCalcular(num1, num2, operacao, out double resultado, out string erro))
+                {
                     Console.WriteLine("Resultado: " + resultado);
                 }
-                Console.WriteLine();
+                else
+                {
+                    Console.WriteLine(erro);
+                }
             }
-            Console.WriteLine();
+        }
+
+        private static bool IsExit(string input)
+        {
+            if (string.IsNullOrWhiteSpace(input)) return false;
+            var t = input.Trim().ToLowerInvariant();
+            return t == "sair" || t == "exit" || t == "q" || t == "quit" || t == "s" || t == "Sair" || t == "Exit" || t == "Q" || t == "S" || t == "Quit";
         }
     }
 }
